@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { email, form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
 import { IFormData } from '../../models/IFormData';
 
@@ -13,6 +13,7 @@ interface IValidatePassword {
   selector: 'app-registro',
   imports: [FormField],
   templateUrl: './registro.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './registro.css',
 })
 export class Registro {

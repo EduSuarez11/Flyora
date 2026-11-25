@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
 import { IFormData } from '../../models/IFormData';
 
@@ -6,13 +6,13 @@ interface ILabelLogin {
   label: string;
   id: string;
   placeholder: string;
-
 }
 
 @Component({
   selector: 'app-login',
   imports: [FormField],
   templateUrl: './login.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './login.css',
 })
 export class Login {
@@ -28,7 +28,7 @@ export class Login {
 
   labelsOfLogin: Array<ILabelLogin> = [
     { label: 'Correo electrónico', id: 'email', placeholder: 'tu@correo.com' },
-    { label: 'Contraseña', id: 'password', placeholder: 'Introduce tu contraseña' }
+    { label: 'Contraseña', id: 'password', placeholder: 'Introduce tu contraseña' },
   ];
 
   loginForm = form(this.formDataModel);
