@@ -1,5 +1,5 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
-import { email, form, FormField, maxLength, minLength, required, validate } from '@angular/forms/signals';
+import { email, FieldTree, form, FormField, maxLength, minLength, required, TreeValidationResult, validate, FormRoot } from '@angular/forms/signals';
 import { IFormData } from '../../models/IFormData';
 
 interface IValidatePassword {
@@ -11,7 +11,7 @@ interface IValidatePassword {
 
 @Component({
   selector: 'app-registro',
-  imports: [FormField],
+  imports: [FormField, FormRoot],
   templateUrl: './registro.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './registro.css',
@@ -27,7 +27,7 @@ export class Registro {
     tokenRecaptcha: '',
   });
 
-  registroForm = form(this.formDataModel, (schema) => {
+  registerForm = form(this.formDataModel, (schema) => {
     required(schema.nombre, { message: 'El nombre es obligatorio.' });
     minLength(schema.nombre, 3, { message: 'El nombre debe tener al menos 3 caracteres.' });
     maxLength(schema.nombre, 30, { message: 'El nombre no puede superar los 30 caracteres.' });
@@ -75,11 +75,27 @@ export class Registro {
     });
 
     required(schema.ageAndConditions, { message: 'Debes confirmar que eres mayor de edad.' });
-  });
+  },
+    {
+      submission: {
+        async action(
+          field: FieldTree<IFormData, string | number>,
+          detail: {
+            root: FieldTree<IFormData, string | number>;
+            submitted: FieldTree<unknown, string | number>
+          }
+        ): Promise<TreeValidationResult> {
+
+
+
+          return { kind: 'RegisterErrorAPI', message: '' }
+        },
+        onInvalid(field, detail) { }
+      }
+    }
+  );
 
   SubmitForm(): void {
-    if (this.registroForm().invalid()) return;
-
-    console.log(this.formDataModel());
+    if (this.registerForm().invalid()) return;
   }
 }

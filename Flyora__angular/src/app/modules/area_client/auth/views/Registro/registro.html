@@ -6,7 +6,7 @@
         <p class="auth__subtitle">Regístrate para reservar tus próximos viajes y alojamientos.</p>
       </header>
 
-      <form class="auth__form" novalidate>
+      <form class="auth__form" method="post" [formRoot]="registerForm">
         <div class="auth__field">
           <label class="auth__label" for="nombre">Nombre</label>
           <input
@@ -15,11 +15,11 @@
             type="text"
             placeholder="Tu nombre"
             autocomplete="given-name"
-            [formField]="registroForm.nombre"
+            [formField]="registerForm.nombre"
           />
-          @if (registroForm.nombre().touched() && registroForm.nombre().invalid()) {
+          @if (registerForm.nombre().touched() && registerForm.nombre().invalid()) {
             <div class="auth__error">
-              @for (error of registroForm.nombre().errors(); track error) {
+              @for (error of registerForm.nombre().errors(); track error) {
                 <p>{{ error.message }}</p>
               }
             </div>
@@ -34,11 +34,11 @@
             type="text"
             placeholder="Tus apellidos"
             autocomplete="family-name"
-            [formField]="registroForm.apellidos"
+            [formField]="registerForm.apellidos"
           />
-          @if (registroForm.apellidos().touched() && registroForm.apellidos().invalid()) {
+          @if (registerForm.apellidos().touched() && registerForm.apellidos().invalid()) {
             <div class="auth__error">
-              @for (error of registroForm.apellidos().errors(); track error) {
+              @for (error of registerForm.apellidos().errors(); track error) {
                 <p>{{ error.message }}</p>
               }
             </div>
@@ -53,11 +53,11 @@
             type="email"
             placeholder="tu@correo.com"
             autocomplete="email"
-            [formField]="registroForm.email"
+            [formField]="registerForm.email"
           />
-          @if (registroForm.email().touched() && registroForm.email().invalid()) {
+          @if (registerForm.email().touched() && registerForm.email().invalid()) {
             <div class="auth__error">
-              @for (error of registroForm.email().errors(); track error) {
+              @for (error of registerForm.email().errors(); track error) {
                 <p>{{ error.message }}</p>
               }
             </div>
@@ -72,11 +72,11 @@
             type="password"
             placeholder="Crea una contraseña"
             autocomplete="new-password"
-            [formField]="registroForm.password"
+            [formField]="registerForm.password"
           />
-          @if (registroForm.password().touched() && registroForm.password().invalid()) {
+          @if (registerForm.password().touched() && registerForm.password().invalid()) {
             <div class="auth__error">
-              @for (error of registroForm.password().errors(); track error) {
+              @for (error of registerForm.password().errors(); track error) {
                 @let errorsValidate = error.message!.split("|");
                 @for (err of errorsValidate; track $index) {
                   <p>{{ err }}</p>
@@ -94,7 +94,7 @@
             type="password"
             placeholder="Repite la contraseña"
             autocomplete="new-password"
-            [formField]="registroForm.repeatPassword"
+            [formField]="registerForm.repeatPassword"
           />
         </div>
 
@@ -112,22 +112,22 @@
 
         <div class="auth__field auth__field--checkbox">
           <label class="auth__checkbox" for="mayoria-edad">
-            <input class="auth__checkbox-input" id="mayoria-edad" type="checkbox" [formField]="registroForm.ageAndConditions" />
+            <input class="auth__checkbox-input" id="mayoria-edad" type="checkbox" [formField]="registerForm.ageAndConditions" />
             <span class="auth__checkbox-label">Soy mayor de edad</span>
           </label>
           <p class="auth__checkbox-help">
             Confirmo que tengo al menos 18 años y acepto las condiciones para reservar viajes y alojamientos.
           </p>
-          @if (registroForm.ageAndConditions().touched() && registroForm.ageAndConditions().invalid()) {
+          @if (registerForm.ageAndConditions().touched() && registerForm.ageAndConditions().invalid()) {
             <div class="auth__error auth__error--checkbox">
-              @for (error of registroForm.ageAndConditions().errors(); track error) {
+              @for (error of registerForm.ageAndConditions().errors(); track error) {
                 <p>{{ error.message }}</p>
               }
             </div>
           }
         </div>
 
-        <button class="auth__button" type="submit" (click)="SubmitForm()" [disabled]="registroForm().invalid()">
+        <button class="auth__button" type="submit" (click)="SubmitForm()" [disabled]="registerForm().invalid()">
           Registrarse
         </button>
       </form>
