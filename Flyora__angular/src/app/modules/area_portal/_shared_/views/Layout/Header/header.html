@@ -36,23 +36,22 @@
       </svg>
     </button>
 
-    <div class="header__auth">
-      <a role="button" class="header__auth-button header__auth-button--secondary" (click)="router.navigateByUrl('/auth/Login')">Iniciar sesión</a>
-      <a role="button" class="header__auth-button header__auth-button--primary" (click)="router.navigateByUrl('/auth/Register')">Regístrate</a>
-    </div>
-
-    
-    <!--
-    <div class="header__profile">
-      <span class="header__avatar">SC</span>
-      <span class="header__profile-text">
-        <span class="header__profile-name">Sophie Carter</span>
-        <span class="header__profile-email">sophiecarter@gmail.com</span>
-      </span>
-      <svg class="header__chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="m6 9 6 6 6-6" />
-      </svg>
-    </div>
-    -->
+    @if(!isLogged()) {
+      <div class="header__auth">
+        <a role="button" class="header__auth-button header__auth-button--secondary" (click)="router.navigateByUrl('/auth/Login')">Iniciar sesión</a>
+        <a role="button" class="header__auth-button header__auth-button--primary" (click)="router.navigateByUrl('/auth/Register')">Regístrate</a>
+      </div>
+    } @else {
+      <div class="header__profile">
+        <img [src]="client()?.cuenta.avatar" class="header__avatar" />
+        <span class="header__profile-text">
+          <span class="header__profile-name">{{client()?.nombre}} {{client()?.apellidos}}</span>
+          <span class="header__profile-email">{{client()?.cuenta.email}}</span>
+        </span>
+        <svg class="header__chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </div>
+    }
   </div>
 </header>
