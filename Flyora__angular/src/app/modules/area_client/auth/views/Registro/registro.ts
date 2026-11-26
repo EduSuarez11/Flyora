@@ -1,6 +1,8 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, inject } from '@angular/core';
 import { email, FieldTree, form, FormField, maxLength, minLength, required, TreeValidationResult, validate, FormRoot } from '@angular/forms/signals';
 import { IFormData } from '../../models/IFormData';
+import { AuthService } from '../../controllers/services/AuthService';
+import { StorageGlobal } from '../../../../_shared_/controllers/services/StorageGlobal';
 
 interface IValidatePassword {
   minuscula: boolean;
@@ -17,6 +19,9 @@ interface IValidatePassword {
   styleUrl: './registro.css',
 })
 export class Registro {
+  private readonly authService = inject(AuthService);
+  private storeGlobal = inject(StorageGlobal);
+
   private formDataModel = signal<IFormData>({
     nombre: '',
     apellidos: '',
@@ -70,32 +75,41 @@ export class Registro {
 
         return { kind: 'errorValidatePassword', message: error }
       }
-
-      //return isValid ? null : { kind: 'passwordNoValid', message: 'Debe incluir una mayúscula, una minúscula, un número y un símbolo.' };
     });
 
     required(schema.ageAndConditions, { message: 'Debes confirmar que eres mayor de edad.' });
   },
     {
       submission: {
-        async action(
+        action: async (
           field: FieldTree<IFormData, string | number>,
           detail: {
             root: FieldTree<IFormData, string | number>;
             submitted: FieldTree<unknown, string | number>
           }
-        ): Promise<TreeValidationResult> {
-
-
-
-          return { kind: 'RegisterErrorAPI', message: '' }
+        ): Promise<TreeValidationResult> => {
+          const {code, message, data} = await this.authService.requestToAuth('Register', {formData: detail.root});
+          if (code === 0) {
+            // TODO email para activar cuenta
+            
+            field().reset();
+            return null; 
+          } else {
+            return { kind: 'RegisterErrorAPI', message }
+          }
         },
-        onInvalid(field, detail) { }
+        onInvalid(
+          field: FieldTree<IFormData, string | number>,
+          detail: { root: FieldTree<IFormData, string | number>, submitted: FieldTree<unknown, string | number> }
+        ) { 
+          field.nombre().markAsTouched();
+          field.apellidos().markAsTouched();
+          field.email().markAsTouched();
+          field.password().markAsTouched();
+          field.repeatPassword().markAsTouched();
+          field.ageAndConditions().markAsTouched();
+        }
       }
     }
   );
-
-  SubmitForm(): void {
-    if (this.registerForm().invalid()) return;
-  }
 }
